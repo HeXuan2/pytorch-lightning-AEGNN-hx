@@ -80,17 +80,19 @@ class StandardData(data.Dataset):
 
     def __getitem__(self, count):
 
+        # 100
+        # 80 10 10
+        # 50
+        # 30
+
         batch = len(self.automs_index_all[count])
         beginData=count*self.batch_size
         label=MoleDataSet(self.data[beginData:beginData+batch]).label()
-
-
 
         mask = torch.Tensor([[x is not None for x in tb] for tb in label])
         target = torch.Tensor([[0 if x is None else x for x in tb] for tb in label])
         mask, target = mask.cuda(), target.cuda()
         weight = torch.ones(target.shape).cuda()
-
 
         return self.automs_index_all[count], self.feats_batch_all[count], self.edges_batch_all[count],self.coors_batch_all[count],self.adj_batch_all[count], self.mask_batch_all[count], batch, self.dataset_type,mask,target,weight
 

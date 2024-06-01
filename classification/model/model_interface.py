@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import inspect
 import torch
 import importlib
@@ -38,15 +37,14 @@ class MInterface(pl.LightningModule):
     def forward(self, automs_index, feats_batch, edges_batch, coors_batch, adj_batch, mask_batch, batch, dataset_type):
         return self.model(automs_index, feats_batch, edges_batch, coors_batch, adj_batch, mask_batch, batch, dataset_type)
 
-    def training_step(self, batch, batch_idx):
 
+    def training_step(self, batch, batch_idx):
         #由于这个框架会自动增加维度，比如在standard_data.py里面__getitem__返回的是维度大小为（32，2）的张量，
         # 到这里batch会自动给它增加一个维度，因此输入模型的时候我们再给它降维就好了
-
         automs_index, feats_batch, edges_batch, coors_batch, adj_batch, mask_batch, batch_size, dataset_type, mask, target, weight =batch
-
-
-
+        # 80
+        # batch[0]=50
+        # batch[1]=30
         automs_index = automs_index[batch_idx]
         feats_batch = feats_batch[batch_idx]
         edges_batch = edges_batch[batch_idx]
@@ -62,6 +60,7 @@ class MInterface(pl.LightningModule):
         print("----training_step----batch_idx", batch_idx,"len(automs_index)=",len(automs_index))
 
         pred = self(automs_index, feats_batch, edges_batch, coors_batch, adj_batch, mask_batch, batch_size, dataset_type)
+
         loss = self.loss_function(pred, target) * weight * mask
         loss = loss.sum() / mask.sum()
 

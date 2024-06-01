@@ -71,7 +71,6 @@ def main(args):
     # logger = TensorBoardLogger(save_dir='kfold_log', name=args.log_dir)
     # args.callbacks = load_callbacks()
     # args.logger = logger
-
     trainer = Trainer.from_argparse_args(args)
     trainer.fit(model, data_module)
 
@@ -113,6 +112,8 @@ if __name__ == '__main__':
                    help='The type of data splitting.')
     parser.add_argument('--split_ratio', type=float, nargs=3, default=[0.8, 0.1, 0.1],
                    help='The ratio of data splitting.[train,valid,test]')
+
+
 
     # Model Hyperparameters
     parser.add_argument('--hid', default=64, type=int)
